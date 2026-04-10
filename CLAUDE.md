@@ -31,6 +31,8 @@ Részletes leírás: @CONTEXT.md
 3. **Ne kérdezz feleslegesen** – ha minden szükséges adat megvan a `brief.md`-ben, azonnal kezdj el dolgozni.
 4. **Ha a brief hiányos**, pontosan jelezd mi hiányzik, mielőtt megállsz.
 5. **WooCommerce / webshop funkciók nem támogatottak v1-ben** – ha a brief ilyet tartalmaz, jelezd vissza és folytasd anélkül.
+6. **Brief validáció kötelező** – mielőtt generálsz, ellenőrizd, hogy a `brief.md` minden mezője ki van töltve. Ha bármely mező értéke `[pl. ...]` vagy `[...]` formátumú (kitöltetlen placeholder), **állj meg** és jelezd, melyik mezők hiányoznak.
+7. **Theme slug sanitálás** – a `brief.md`-ből kiolvasott slug-ot mindig ellenőrizd: csak kisbetű, kötőjel és szám szerepelhet benne. Szóközöket cseréld kötőjelre, ékezetes karaktereket írj át (pl. `á→a`, `ő→o`), egyéb karaktereket hagyd el. Ha a slug érvénytelen és nem lehet automatikusan javítani, jelezd vissza.
 
 ---
 
@@ -49,6 +51,8 @@ Részletes leírás: @CONTEXT.md
 - A `preview.html` a repo gyökerébe kerüljön.
 - A kész theme zip az `output/` mappába kerüljön: `output/{theme-slug}.zip`
 - A zip fájlban a theme könyvtár neve egyezzen a theme slug-gal.
+- **Kötelező zip parancs:** `cd output && zip -r {theme-slug}.zip {theme-slug}/` – TILOS az `output/` könyvtárból zipzelni, mert akkor az `output/{theme-slug}/` kerül a zip gyökerébe és a WordPress nem tudja telepíteni.
+- **Ha az `output/{theme-slug}/` már létezik**, töröld le újragenerálás előtt: `rm -rf output/{theme-slug}/` – hogy ne maradjanak régi futásból való fájlok.
 - Soha ne módosítsd a `CLAUDE.md`-t, `CONTEXT.md`-t, `README.md`-t, `.gitignore`-t generálás közben.
 
 ## Skill routing
