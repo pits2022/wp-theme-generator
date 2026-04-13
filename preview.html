@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Preview – Frizura és Szépség Magazin</title>
+<style>
+/* ========== RESET & PAGE ========== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  background: #ece6f0;
+  min-height: 100vh;
+  padding: 2.5rem 1rem 5rem;
+}
+
+.page-header {
+  max-width: 860px;
+  margin: 0 auto 3.5rem;
+  text-align: center;
+}
+
+.page-header .overline {
+  font-size: 0.65rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #8b3c8b;
+  margin-bottom: 0.7rem;
+}
+
+.page-header h1 {
+  font-size: clamp(1.4rem, 3.5vw, 2rem);
+  font-weight: 300;
+  color: #1e0d2a;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.8rem;
+}
+
+.page-header h1 strong {
+  font-weight: 700;
+}
+
+.page-header .subtitle {
+  font-size: 0.88rem;
+  color: #6a5578;
+  max-width: 520px;
+  margin: 0 auto 1.25rem;
+  line-height: 1.7;
+}
+
+.instruction-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(139,60,139,0.09);
+  border: 1px solid rgba(139,60,139,0.2);
+  color: #6a3a6a;
+  font-size: 0.78rem;
+  padding: 0.5rem 1.2rem;
+  border-radius: 99px;
+}
+
+.instruction-pill::before {
+  content: "↓";
+}
+
+/* ========== DESIGN ROWS ========== */
+.design-row {
+  max-width: 1340px;
+  margin: 0 auto 2.5rem;
+}
+
+.row-label {
+  text-align: center;
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #9a88a8;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.row-label::before,
+.row-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(139,60,139,0.2);
+}
+
+/* ========== CARDS GRID ========== */
+.cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 820px) {
+  .cards-grid { grid-template-columns: 1fr; }
+}
+
+/* ========== CARD SHELL ========== */
+.card {
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: box-shadow 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+
+.card:hover { transform: translateY(-3px); }
+
+.card.selected {
+  box-shadow: 0 0 0 3px #de59de, 0 10px 48px rgba(222,89,222,0.28);
+  transform: translateY(-4px);
+}
+
+.card.dimmed {
+  opacity: 0.28;
+  transform: scale(0.96);
+  pointer-events: none;
+}
+
+.selected-badge {
+  display: none;
+  position: absolute;
+  top: 16px; right: 16px;
+  background: #de59de;
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 5px 13px;
+  border-radius: 99px;
+  z-index: 20;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.card.selected .selected-badge { display: block; }
+
+/* Card anatomy */
+.card-meta { padding: 1.25rem 1.5rem 0.9rem; }
+.card-variant { font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.5; margin-bottom: 0.3rem; }
+.card-name { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.35rem; }
+.card-desc { font-size: 0.77rem; line-height: 1.6; opacity: 0.7; }
+
+.card-sep { height: 1px; background: currentColor; opacity: 0.08; }
+
+.typo-section { padding: 1rem 1.5rem; }
+.micro-label { font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.38; margin-bottom: 0.6rem; }
+
+.palette-section { padding: 0.6rem 1.5rem 0.9rem; }
+.swatches { display: flex; gap: 4px; }
+.swatch { flex: 1; height: 20px; border-radius: 4px; }
+
+.btn-section { padding: 0.75rem 1.5rem 1.5rem; }
+.choose-btn {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.12s;
+}
+.choose-btn:hover { opacity: 0.85; }
+.choose-btn:active { transform: scale(0.98); }
+
+
+/* ========================================================
+   DESIGN A — "Szerkesztői Elegancia"
+   Haute couture editorial. Georgia serif headings,
+   black-and-white restraint, pink as a sparring accent.
+======================================================== */
+
+.da-light {
+  background: #ffffff;
+  color: #1a1a1a;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.10);
+}
+
+.da-light .card-variant { color: #8b3c8b; }
+.da-light .card-name { font-family: Georgia, 'Times New Roman', serif; font-weight: 700; }
+.da-light .typo-h1 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.55rem; font-weight: 300;
+  letter-spacing: 0.04em; line-height: 1.2;
+  color: #1a1a1a; margin-bottom: 0.35rem;
+}
+.da-light .typo-h2 {
+  font-size: 0.62rem; font-weight: 400;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: #de59de; margin-bottom: 0.35rem;
+}
+.da-light .typo-body { font-size: 0.76rem; line-height: 1.7; color: #555; }
+.da-light .choose-btn { background: #1a1a1a; color: #fff; }
+
+/* mini layout */
+.da-light .mini { background: #fff; border-top: 1px solid rgba(0,0,0,0.08); }
+
+.da-light .m-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.55rem 1rem;
+  border-bottom: 2px solid #1a1a1a;
+  font-size: 0.52rem; letter-spacing: 0.14em; text-transform: uppercase; color: #444;
+}
+.da-light .m-nav .m-logo { font-family: Georgia, serif; font-size: 0.72rem; font-weight: 700; color: #1a1a1a; letter-spacing: 0.06em; }
+.da-light .m-nav .m-nav-items { display: flex; gap: 0.65rem; }
+
+.da-light .m-hero {
+  position: relative; height: 116px; overflow: hidden;
+  background: #f8f2f8;
+  display: flex; align-items: flex-end;
+}
+.da-light .m-hero-svg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.da-light .m-hero-text { position: relative; z-index: 1; padding: 0.75rem 1rem; }
+.da-light .m-hero-tag { font-size: 0.5rem; letter-spacing: 0.2em; text-transform: uppercase; color: #de59de; margin-bottom: 0.2rem; }
+.da-light .m-hero-title { font-family: Georgia, serif; font-size: 0.88rem; font-weight: 300; color: #1a1a1a; }
+
+.da-light .m-content {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem; padding: 0.75rem 1rem;
+}
+.da-light .m-art-img {
+  height: 44px; background: #f0e0f0; margin-bottom: 0.3rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.da-light .m-art-cat { font-size: 0.46rem; letter-spacing: 0.12em; text-transform: uppercase; color: #de59de; margin-bottom: 0.1rem; }
+.da-light .m-art-title { font-family: Georgia, serif; font-size: 0.55rem; color: #1a1a1a; line-height: 1.35; }
+
+.da-light .m-banner {
+  margin: 0 1rem 0.6rem;
+  height: 22px; border: 1px dashed #ddd;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.48rem; letter-spacing: 0.1em; text-transform: uppercase; color: #bbb;
+}
+
+.da-light .m-footer {
+  background: #1a1a1a; color: #fff;
+  padding: 0.6rem 1rem;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.5rem; letter-spacing: 0.12em; text-transform: uppercase;
+}
+.da-light .m-footer span { opacity: 0.5; }
+
+
+/* Dark A */
+.da-dark {
+  background: #0e0a12;
+  color: #f0eaf8;
+  box-shadow: 0 2px 24px rgba(0,0,0,0.45);
+}
+
+.da-dark .card-sep { opacity: 0.12; }
+.da-dark .card-variant { color: #de59de; opacity: 1; }
+.da-dark .card-name { font-family: Georgia, 'Times New Roman', serif; font-weight: 700; color: #f0eaf8; }
+.da-dark .card-desc { color: #b8a8cc; }
+.da-dark .typo-h1 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.55rem; font-weight: 300;
+  letter-spacing: 0.04em; line-height: 1.2;
+  color: #f0eaf8; margin-bottom: 0.35rem;
+}
+.da-dark .typo-h2 {
+  font-size: 0.62rem; font-weight: 400;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: #de59de; margin-bottom: 0.35rem;
+}
+.da-dark .typo-body { font-size: 0.76rem; line-height: 1.7; color: #9a88b0; }
+.da-dark .choose-btn { background: #de59de; color: #fff; }
+
+.da-dark .mini { background: #0e0a12; border-top: 1px solid rgba(255,255,255,0.06); }
+
+.da-dark .m-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid rgba(222,89,222,0.4);
+  font-size: 0.52rem; letter-spacing: 0.14em; text-transform: uppercase; color: #9a88b0;
+}
+.da-dark .m-nav .m-logo { font-family: Georgia, serif; font-size: 0.72rem; font-weight: 700; color: #f0eaf8; }
+.da-dark .m-nav .m-nav-items { display: flex; gap: 0.65rem; }
+
+.da-dark .m-hero {
+  position: relative; height: 116px; overflow: hidden;
+  background: #1a0f22;
+  display: flex; align-items: flex-end;
+}
+.da-dark .m-hero-text { position: relative; z-index: 1; padding: 0.75rem 1rem; }
+.da-dark .m-hero-tag { font-size: 0.5rem; letter-spacing: 0.2em; text-transform: uppercase; color: #de59de; margin-bottom: 0.2rem; }
+.da-dark .m-hero-title { font-family: Georgia, serif; font-size: 0.88rem; font-weight: 300; color: #f0eaf8; }
+
+.da-dark .m-content {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem; padding: 0.75rem 1rem;
+}
+.da-dark .m-art-img {
+  height: 44px; background: #280a28; margin-bottom: 0.3rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.da-dark .m-art-cat { font-size: 0.46rem; letter-spacing: 0.12em; text-transform: uppercase; color: #de59de; margin-bottom: 0.1rem; }
+.da-dark .m-art-title { font-family: Georgia, serif; font-size: 0.55rem; color: #e0d4f0; line-height: 1.35; }
+
+.da-dark .m-banner {
+  margin: 0 1rem 0.6rem;
+  height: 22px; border: 1px dashed rgba(222,89,222,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.48rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(222,89,222,0.4);
+}
+
+.da-dark .m-footer {
+  background: #07050a; color: #f0eaf8;
+  padding: 0.6rem 1rem;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.5rem; letter-spacing: 0.12em; text-transform: uppercase;
+}
+.da-dark .m-footer span { opacity: 0.4; }
+
+
+/* ========================================================
+   DESIGN B — "Feminin Légiesség"
+   Soft, rounded, warm. Pastel rose tints, generous
+   whitespace, friendly card-based layout. Approachable
+   for all age groups.
+======================================================== */
+
+.db-light {
+  background: #fdf5fc;
+  color: #2d1235;
+  box-shadow: 0 2px 20px rgba(139,60,139,0.10);
+}
+
+.db-light .card-variant { color: #8b3c8b; }
+.db-light .card-name { font-weight: 700; letter-spacing: -0.01em; color: #2d1235; }
+.db-light .card-desc { color: #7a5588; }
+
+.db-light .typo-h1 {
+  font-size: 1.65rem; font-weight: 700;
+  letter-spacing: -0.02em; line-height: 1.15;
+  color: #2d1235; margin-bottom: 0.35rem;
+}
+.db-light .typo-h2 {
+  font-size: 0.82rem; font-weight: 600;
+  letter-spacing: 0.01em; color: #8b3c8b; margin-bottom: 0.35rem;
+}
+.db-light .typo-body { font-size: 0.76rem; line-height: 1.7; color: #7a5588; }
+.db-light .choose-btn { background: #de59de; color: #fff; border-radius: 99px; }
+
+.db-light .mini { background: #fdf5fc; border-top: 1px solid rgba(139,60,139,0.1); }
+
+.db-light .m-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.6rem 1rem;
+  background: #fff;
+  border-bottom: 1px solid rgba(139,60,139,0.1);
+  font-size: 0.52rem; letter-spacing: 0.1em; text-transform: uppercase; color: #8b3c8b;
+}
+.db-light .m-nav .m-logo {
+  font-size: 0.78rem; font-weight: 800; color: #2d1235; letter-spacing: -0.01em;
+}
+.db-light .m-nav .m-nav-items { display: flex; gap: 0.6rem; }
+
+.db-light .m-hero {
+  position: relative; height: 116px; overflow: hidden;
+  background: linear-gradient(135deg, #f7e0f7 0%, #e8d0f0 100%);
+  display: flex; align-items: center; padding: 0 1rem;
+}
+.db-light .m-hero-inner { flex: 1; }
+.db-light .m-hero-tag { font-size: 0.5rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: #8b3c8b; margin-bottom: 0.2rem; }
+.db-light .m-hero-title { font-size: 1rem; font-weight: 700; color: #2d1235; line-height: 1.2; letter-spacing: -0.01em; }
+.db-light .m-hero-svg-wrap {
+  width: 72px; height: 80px; border-radius: 8px; overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+}
+
+.db-light .m-cats {
+  display: flex; gap: 0.4rem; padding: 0.6rem 1rem 0;
+  overflow: hidden;
+}
+.db-light .m-cat-chip {
+  font-size: 0.5rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 99px;
+  border: 1px solid rgba(139,60,139,0.25); color: #8b3c8b;
+  white-space: nowrap;
+}
+.db-light .m-cat-chip.active { background: #8b3c8b; color: #fff; border-color: #8b3c8b; }
+
+.db-light .m-content {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem; padding: 0.5rem 1rem;
+}
+.db-light .m-art-card {
+  background: #fff; border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 6px rgba(139,60,139,0.08);
+}
+.db-light .m-art-img {
+  height: 40px; background: linear-gradient(135deg, #f0d8f8 0%, #e0c0f0 100%);
+  display: flex; align-items: center; justify-content: center;
+}
+.db-light .m-art-body { padding: 0.3rem 0.4rem 0.35rem; }
+.db-light .m-art-cat { font-size: 0.44rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #de59de; margin-bottom: 0.08rem; }
+.db-light .m-art-title { font-size: 0.52rem; font-weight: 700; color: #2d1235; line-height: 1.3; }
+
+.db-light .m-banner {
+  margin: 0.2rem 1rem 0.5rem;
+  height: 22px; border-radius: 6px; border: 1px dashed rgba(222,89,222,0.35);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.46rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(222,89,222,0.5);
+}
+
+.db-light .m-footer {
+  background: #2d1235; color: #e8d0f0;
+  padding: 0.65rem 1rem;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.5rem;
+}
+.db-light .m-footer .m-footer-logo { font-size: 0.62rem; font-weight: 800; color: #fff; }
+.db-light .m-footer span { opacity: 0.5; }
+
+
+/* Dark B */
+.db-dark {
+  background: #1e0d28;
+  color: #eeddf8;
+  box-shadow: 0 2px 24px rgba(0,0,0,0.45);
+}
+
+.db-dark .card-sep { opacity: 0.1; }
+.db-dark .card-variant { color: #e87de8; opacity: 1; }
+.db-dark .card-name { font-weight: 700; letter-spacing: -0.01em; color: #f0e4f8; }
+.db-dark .card-desc { color: #a888c0; }
+
+.db-dark .typo-h1 {
+  font-size: 1.65rem; font-weight: 700;
+  letter-spacing: -0.02em; line-height: 1.15;
+  color: #f0e4f8; margin-bottom: 0.35rem;
+}
+.db-dark .typo-h2 {
+  font-size: 0.82rem; font-weight: 600;
+  color: #e87de8; margin-bottom: 0.35rem;
+}
+.db-dark .typo-body { font-size: 0.76rem; line-height: 1.7; color: #a888c0; }
+.db-dark .choose-btn { background: #de59de; color: #fff; border-radius: 99px; }
+
+.db-dark .mini { background: #1e0d28; border-top: 1px solid rgba(255,255,255,0.05); }
+
+.db-dark .m-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.6rem 1rem;
+  background: #160920;
+  border-bottom: 1px solid rgba(232,125,232,0.15);
+  font-size: 0.52rem; letter-spacing: 0.1em; text-transform: uppercase; color: #a888c0;
+}
+.db-dark .m-nav .m-logo { font-size: 0.78rem; font-weight: 800; color: #f0e4f8; }
+.db-dark .m-nav .m-nav-items { display: flex; gap: 0.6rem; }
+
+.db-dark .m-hero {
+  position: relative; height: 116px; overflow: hidden;
+  background: linear-gradient(135deg, #3d1a50 0%, #2a0e3c 100%);
+  display: flex; align-items: center; padding: 0 1rem;
+}
+.db-dark .m-hero-inner { flex: 1; }
+.db-dark .m-hero-tag { font-size: 0.5rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: #e87de8; margin-bottom: 0.2rem; }
+.db-dark .m-hero-title { font-size: 1rem; font-weight: 700; color: #f0e4f8; line-height: 1.2; }
+.db-dark .m-hero-svg-wrap {
+  width: 72px; height: 80px; border-radius: 8px; overflow: hidden;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.35);
+}
+
+.db-dark .m-cats {
+  display: flex; gap: 0.4rem; padding: 0.6rem 1rem 0;
+  overflow: hidden;
+}
+.db-dark .m-cat-chip {
+  font-size: 0.5rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 99px;
+  border: 1px solid rgba(232,125,232,0.2); color: #e87de8;
+  white-space: nowrap;
+}
+.db-dark .m-cat-chip.active { background: #de59de; color: #fff; border-color: #de59de; }
+
+.db-dark .m-content {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem; padding: 0.5rem 1rem;
+}
+.db-dark .m-art-card {
+  background: #2e1440; border-radius: 8px;
+  overflow: hidden;
+}
+.db-dark .m-art-img {
+  height: 40px; background: linear-gradient(135deg, #4a1a5a 0%, #380e48 100%);
+  display: flex; align-items: center; justify-content: center;
+}
+.db-dark .m-art-body { padding: 0.3rem 0.4rem 0.35rem; }
+.db-dark .m-art-cat { font-size: 0.44rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #e87de8; margin-bottom: 0.08rem; }
+.db-dark .m-art-title { font-size: 0.52rem; font-weight: 700; color: #e8d4f8; line-height: 1.3; }
+
+.db-dark .m-banner {
+  margin: 0.2rem 1rem 0.5rem;
+  height: 22px; border-radius: 6px; border: 1px dashed rgba(232,125,232,0.25);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.46rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(232,125,232,0.4);
+}
+
+.db-dark .m-footer {
+  background: #0e0616; color: #a888c0;
+  padding: 0.65rem 1rem;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.5rem;
+}
+.db-dark .m-footer .m-footer-logo { font-size: 0.62rem; font-weight: 800; color: #e87de8; }
+.db-dark .m-footer span { opacity: 0.5; }
+
+
+/* ========================================================
+   DESIGN C — "Kortárs Dinamizmus"
+   High-contrast, bold editorial grid. Strong hierarchy,
+   horizontal rules, asymmetric tension. Energetic
+   and unapologetically modern.
+======================================================== */
+
+.dc-light {
+  background: #ffffff;
+  color: #111;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.10);
+}
+
+.dc-light .card-variant { color: #de59de; }
+.dc-light .card-name { font-weight: 800; font-size: 1.1rem; letter-spacing: -0.02em; }
+.dc-light .card-desc { color: #666; }
+
+.dc-light .typo-h1 {
+  font-size: 1.85rem; font-weight: 800;
+  letter-spacing: -0.03em; line-height: 1.05;
+  color: #111; margin-bottom: 0.35rem;
+}
+.dc-light .typo-h2 {
+  font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: #111; border-left: 3px solid #de59de;
+  padding-left: 0.5rem; margin-bottom: 0.35rem;
+}
+.dc-light .typo-body { font-size: 0.76rem; line-height: 1.7; color: #555; }
+.dc-light .choose-btn { background: #de59de; color: #fff; border-radius: 4px; font-weight: 800; letter-spacing: 0.05em; }
+
+.dc-light .mini { background: #fff; border-top: 3px solid #111; }
+
+.dc-light .m-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #eee;
+  font-size: 0.5rem; letter-spacing: 0.12em; text-transform: uppercase; color: #555;
+}
+.dc-light .m-nav .m-logo { font-size: 0.78rem; font-weight: 900; color: #111; letter-spacing: -0.01em; }
+.dc-light .m-nav .m-nav-items { display: flex; gap: 0.6rem; }
+
+.dc-light .m-hero {
+  display: grid; grid-template-columns: 1fr 90px;
+  height: 116px; overflow: hidden;
+}
+.dc-light .m-hero-left {
+  background: #111; padding: 0.75rem 1rem;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.dc-light .m-hero-tag { font-size: 0.48rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #de59de; margin-bottom: 0.25rem; }
+.dc-light .m-hero-title { font-size: 0.88rem; font-weight: 800; color: #fff; line-height: 1.15; letter-spacing: -0.01em; }
+.dc-light .m-hero-right { background: #f0d8f0; display: flex; align-items: center; justify-content: center; }
+
+.dc-light .m-content {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 0; border-top: 1px solid #eee;
+}
+.dc-light .m-art-item { border-right: 1px solid #eee; padding: 0.5rem 0.6rem; }
+.dc-light .m-art-item:last-child { border-right: none; }
+.dc-light .m-art-img {
+  height: 36px; background: #f5e8f5; margin-bottom: 0.28rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.dc-light .m-art-cat {
+  font-size: 0.44rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+  color: #de59de; margin-bottom: 0.08rem;
+}
+.dc-light .m-art-title { font-size: 0.52rem; font-weight: 700; color: #111; line-height: 1.3; }
+
+.dc-light .m-sidebar-row {
+  display: grid; grid-template-columns: 1fr 80px;
+  gap: 0; border-top: 1px solid #eee;
+}
+.dc-light .m-sidebar-main { padding: 0.4rem 0.6rem; }
+.dc-light .m-sidebar-tag { font-size: 0.42rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #aaa; margin-bottom: 0.08rem; }
+.dc-light .m-sidebar-text { font-size: 0.5rem; color: #555; line-height: 1.4; }
+.dc-light .m-sidebar-ad {
+  background: #f8f2f8; border-left: 1px solid #eee;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 0.3rem;
+}
+.dc-light .m-sidebar-ad-label { font-size: 0.4rem; letter-spacing: 0.1em; text-transform: uppercase; color: #ccc; margin-bottom: 0.1rem; }
+.dc-light .m-sidebar-ad-box { width: 52px; height: 28px; border: 1px dashed #ddd; display: flex; align-items: center; justify-content: center; font-size: 0.4rem; color: #ccc; }
+
+.dc-light .m-footer {
+  display: grid; grid-template-columns: auto 1fr;
+  background: #de59de;
+  padding: 0.5rem 1rem;
+  align-items: center; gap: 0.75rem;
+}
+.dc-light .m-footer .m-footer-logo { font-size: 0.65rem; font-weight: 900; color: #fff; white-space: nowrap; }
+.dc-light .m-footer .m-footer-links { font-size: 0.46rem; color: rgba(255,255,255,0.75); letter-spacing: 0.1em; text-transform: uppercase; }
+
+
+/* Dark C */
+.dc-dark {
+  background: #111111;
+  color: #f0f0f0;
+  box-shadow: 0 2px 24px rgba(0,0,0,0.55);
+}
+
+.dc-dark .card-sep { opacity: 0.1; }
+.dc-dark .card-variant { color: #de59de; opacity: 1; }
+.dc-dark .card-name { font-weight: 800; font-size: 1.1rem; letter-spacing: -0.02em; color: #f0f0f0; }
+.dc-dark .card-desc { color: #888; }
+
+.dc-dark .typo-h1 {
+  font-size: 1.85rem; font-weight: 800;
+  letter-spacing: -0.03em; line-height: 1.05;
+  color: #f0f0f0; margin-bottom: 0.35rem;
+}
+.dc-dark .typo-h2 {
+  font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: #f0f0f0; border-left: 3px solid #de59de;
+  padding-left: 0.5rem; margin-bottom: 0.35rem;
+}
+.dc-dark .typo-body { font-size: 0.76rem; line-height: 1.7; color: #888; }
+.dc-dark .choose-btn { background: #de59de; color: #fff; border-radius: 4px; font-weight: 800; letter-spacing: 0.05em; }
+
+.dc-dark .mini { background: #111; border-top: 3px solid #de59de; }
+
+.dc-dark .m-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  font-size: 0.5rem; letter-spacing: 0.12em; text-transform: uppercase; color: #666;
+}
+.dc-dark .m-nav .m-logo { font-size: 0.78rem; font-weight: 900; color: #fff; }
+.dc-dark .m-nav .m-nav-items { display: flex; gap: 0.6rem; }
+
+.dc-dark .m-hero {
+  display: grid; grid-template-columns: 1fr 90px;
+  height: 116px; overflow: hidden;
+}
+.dc-dark .m-hero-left {
+  background: #de59de; padding: 0.75rem 1rem;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.dc-dark .m-hero-tag { font-size: 0.48rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-bottom: 0.25rem; }
+.dc-dark .m-hero-title { font-size: 0.88rem; font-weight: 800; color: #fff; line-height: 1.15; }
+.dc-dark .m-hero-right { background: #1e1e1e; display: flex; align-items: center; justify-content: center; }
+
+.dc-dark .m-content {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 0; border-top: 1px solid rgba(255,255,255,0.07);
+}
+.dc-dark .m-art-item { border-right: 1px solid rgba(255,255,255,0.07); padding: 0.5rem 0.6rem; }
+.dc-dark .m-art-item:last-child { border-right: none; }
+.dc-dark .m-art-img {
+  height: 36px; background: #2a2a2a; margin-bottom: 0.28rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.dc-dark .m-art-cat { font-size: 0.44rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #de59de; margin-bottom: 0.08rem; }
+.dc-dark .m-art-title { font-size: 0.52rem; font-weight: 700; color: #f0f0f0; line-height: 1.3; }
+
+.dc-dark .m-sidebar-row {
+  display: grid; grid-template-columns: 1fr 80px;
+  gap: 0; border-top: 1px solid rgba(255,255,255,0.07);
+}
+.dc-dark .m-sidebar-main { padding: 0.4rem 0.6rem; }
+.dc-dark .m-sidebar-tag { font-size: 0.42rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #555; margin-bottom: 0.08rem; }
+.dc-dark .m-sidebar-text { font-size: 0.5rem; color: #888; line-height: 1.4; }
+.dc-dark .m-sidebar-ad {
+  background: #1a1a1a; border-left: 1px solid rgba(255,255,255,0.07);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 0.3rem;
+}
+.dc-dark .m-sidebar-ad-label { font-size: 0.4rem; letter-spacing: 0.1em; text-transform: uppercase; color: #444; margin-bottom: 0.1rem; }
+.dc-dark .m-sidebar-ad-box { width: 52px; height: 28px; border: 1px dashed #333; display: flex; align-items: center; justify-content: center; font-size: 0.4rem; color: #444; }
+
+.dc-dark .m-footer {
+  display: grid; grid-template-columns: auto 1fr;
+  background: #0a0a0a;
+  padding: 0.5rem 1rem;
+  align-items: center; gap: 0.75rem;
+  border-top: 2px solid #de59de;
+}
+.dc-dark .m-footer .m-footer-logo { font-size: 0.65rem; font-weight: 900; color: #de59de; white-space: nowrap; }
+.dc-dark .m-footer .m-footer-links { font-size: 0.46rem; color: #555; letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* ========== SVG Placeholder helper ========== */
+.img-placeholder { width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+
+<!-- ===== PAGE HEADER ===== -->
+<header class="page-header">
+  <p class="overline">Design Preview · 2026</p>
+  <h1><strong>Frizura és Szépség Magazin</strong></h1>
+  <p class="subtitle">3 design irányvonal, mindegyik világos és sötét változatban. Kattints az „Ezt választom" gombra a preferált variáns jelöléséhez.</p>
+  <span class="instruction-pill">Görgess le az összes variáns megtekintéséhez</span>
+</header>
+
+<!-- ===================================================
+     DESIGN A — Szerkesztői Elegancia
+=================================================== -->
+<section class="design-row">
+  <p class="row-label">Design A — Szerkesztői Elegancia</p>
+  <div class="cards-grid">
+
+    <!-- A LIGHT -->
+    <article class="card da-light" onclick="selectCard(this)">
+      <div class="selected-badge">✓ Kiválasztva</div>
+      <div class="card-meta">
+        <p class="card-variant">Nappal · Világos</p>
+        <h2 class="card-name">Szerkesztői Elegancia</h2>
+        <p class="card-desc">Haute couture magazin hangulatú, talpas betűtípussal. Visszafogott, fekete-fehér alapon a magenta csak finom akcentként jelenik meg — erős, mégis légies.</p>
+      </div>
+      <hr class="card-sep">
+      <div class="typo-section">
+        <p class="micro-label">Tipográfia (Sen betűtípussal a kész témában)</p>
+        <p class="da-light typo-h1">Frizura és Szépség</p>
+        <p class="da-light typo-h2">Szépségápolás · Trendi frizurák</p>
+        <p class="da-light typo-body">Fedezd fel a legfrissebb trendjeinket: a legjobb hajápolási tippek, szezonális szépségrutinok és professzionális tanácsok egy helyen.</p>
+      </div>
+      <div class="palette-section">
+        <p class="micro-label" style="color:#1a1a1a;">Szín paletta</p>
+        <div class="swatches">
+          <div class="swatch" style="background:#de59de;" title="Primary – Magenta"></div>
+          <div class="swatch" style="background:#8b3c8b;" title="Secondary – Plum"></div>
+          <div class="swatch" style="background:#f0e0f0;" title="Accent – Rózsa"></div>
+          <div class="swatch" style="background:#ffffff; border:1px solid #eee;" title="Háttér – Fehér"></div>
+          <div class="swatch" style="background:#1a1a1a;" title="Szöveg – Fekete"></div>
+        </div>
+      </div>
+      <div class="mini da-light">
+        <!-- Nav -->
+        <div class="m-nav">
+          <span class="m-logo">F&amp;Sz</span>
+          <span class="m-nav-items">
+            <span>Frizurák</span><span>Szépség</span><span>Divat</span><span>Egészség</span><span>···</span>
+          </span>
+        </div>
+        <!-- Hero -->
+        <div class="m-hero">
+          <svg class="img-placeholder" viewBox="0 0 600 116" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect width="600" height="116" fill="#f0e6f0"/>
+            <rect x="0" y="0" width="600" height="116" fill="url(#grad-a-l)"/>
+            <defs>
+              <linearGradient id="grad-a-l" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#f8f0f8"/>
+                <stop offset="100%" stop-color="#e8d8e8"/>
+              </linearGradient>
+            </defs>
+            <text x="300" y="52" text-anchor="middle" dominant-baseline="middle" font-family="Georgia,serif" font-size="11" fill="#c0a0c0">Slider – Legfrissebb cikkek képei</text>
+            <text x="300" y="68" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-size="8" fill="#d0b0d0">Hero kép</text>
+          </svg>
+          <div class="m-hero-text">
+            <p class="m-hero-tag">Kiemelt cikk</p>
+            <p class="m-hero-title">Az idei nyár legdivatosabb frizurái</p>
+          </div>
+        </div>
+        <!-- Articles -->
+        <div class="m-content">
+          <div class="m-art">
+            <div class="m-art-img">
+              <svg viewBox="0 0 80 44" xmlns="http://www.w3.org/2000/svg"><rect width="80" height="44" fill="#f0e0f0"/><text x="40" y="22" text-anchor="middle" dominant-baseline="middle" font-size="7" fill="#d0a0d0">Kép</text></svg>
+            </div>
+            <p class="m-art-cat">Hajápolás</p>
+            <p class="m-art-title">5 haj­maszk, amit ki kell próbálnod</p>
+          </div>
+          <div class="m-art">
+            <div class="m-art-img">
+              <svg viewBox="0 0 80 44" xmlns="http://www.w3.org/2000/svg"><rect width="80" height="44" fill="#ecdcec"/><text x="40" y="22" text-anchor="middle" dominant-baseline="middle" font-size="7" fill="#d0a0d0">Kép</text></svg>
+            </div>
+            <p class="m-art-cat">Smink</p>
+            <p class="m-art-title">Természetes ragyogás lépésről lépésre</p>
+          </div>
+          <div class="m-art">
+            <div class="m-art-img">
+              <svg viewBox="0 0 80 44" xmlns="http://www.w3.org/2000/svg"><rect width="80" height="44" fill="#e8d4e8"/><text x="40" y="22" text-anchor="middle" dominant-baseline="middle" font-size="7" fill="#d0a0d0">Kép</text></svg>
+            </div>
+            <p class="m-art-cat">Divat</p>
+            <p class="m-art-title">Capsule wardrobe tavasszal</p>
+          </div>
+        </div>
+        <!-- Banner -->
+        <div class="m-banner">Banner · 728×90</div>
+        <!-- Footer -->
+        <div class="m-footer">
+          <span>© Frizura és Szépség Magazin</span>
+          <span>Adatvédelem · Impresszum · Hírlevél</span>
+        </div>
+      </div>
+      <div class="btn-section">
+        <button class="choose-btn da-light" onclick="selectCard(this.closest('.card')); event.stopPropagation();">Ezt választom</button>
+      </div>
+    </article>
+
+    <!-- A DARK -->
+    <article class="card da-dark" onclick="selectCard(this)">
+      <div class="selected-badge">✓ Kiválasztva</div>
+      <div class="card-meta">
+        <p class="card-variant" style="color:#de59de;opacity:1;">Este · Sötét</p>
+        <h2 class="card-name" style="color:#f0eaf8;">Szerkesztői Elegancia</h2>
+        <p class="card-desc">Éjfekete háttér, meleg krémfehér szöveg. A magenta accent itt erősebb szereplő — megvilágítja a sötétséget, mint egy fényszóró a haute couture kifutón.</p>
+      </div>
+      <hr class="card-sep" style="background:#f0eaf8;">
+      <div class="typo-section">
+        <p class="micro-label" style="color:#f0eaf8;opacity:0.38;">Tipográfia (Sen betűtípussal a kész témában)</p>
+        <p class="da-dark typo-h1">Frizura és Szépség</p>
+        <p class="da-dark typo-h2">Szépségápolás · Trendi frizurák</p>
+        <p class="da-dark typo-body">Fedezd fel a legfrissebb trendjeinket: a legjobb hajápolási tippek, szezonális szépségrutinok és professzionális tanácsok egy helyen.</p>
+      </div>
+      <div class="palette-section">
+        <p class="micro-label" style="color:#f0eaf8;">Szín paletta</p>
+        <div class="swatches">
+          <div class="swatch" style="background:#de59de;" title="Primary"></div>
+          <div class="swatch" style="background:#b060b0;" title="Secondary"></div>
+          <div class="swatch" style="background:#3d1a3d;" title="Accent"></div>
+          <div class="swatch" style="background:#0e0a12;" title="Háttér"></div>
+          <div class="swatch" style="background:#f0eaf8;" title="Szöveg"></div>
+        </div>
+      </div>
+      <div class="mini da-dark">
+        <div class="m-nav">
+          <span class="m-logo">F&amp;Sz</span>
+          <span class="m-nav-items"><span>Frizurák</span><span>Szépség</span><span>Divat</span><span>Egészség</span><span>···</span></span>
+        </div>
+        <div class="m-hero">
+          <svg class="img-placeholder" viewBox="0 0 600 116" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect width="600" height="116" fill="#200a28"/>
+            <text x="300" y="52" text-anchor="middle" dominant-baseline="middle" font-family="Georgia,serif" font-size="11" fill="#6a3a6a">Slider – Legfrissebb cikkek képei</text>
+            <text x="300" y="68" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-size="8" fill="#5a2a5a">Hero kép</text>
+          </svg>
+          <div class="m-hero-text">
+            <p class="m-hero-tag">Kiemelt cikk</p>
+            <p class="m-hero-title">Az idei nyár legdivatosabb frizurái</p>
+          </div>
+        </div>
+        <div class="m-content">
+          <div class="m-art">
+            <div class="m-art-img">
+              <svg viewBox="0 0 80 44" xmlns="http://www.w3.org/2000/svg"><rect width="80" height="44" fill="#280a28"/><text x="40" y="22" text-anchor="middle" dominant-baseline="middle" font-size="7" fill="#6a3a6a">Kép</text></svg>
+            </div>
+            <p class="m-art-cat">Hajápolás</p>
+            <p class="m-art-title">5 hajolajtól, amit ki kell próbálnod</p>
+          </div>
+          <div class="m-art">
+            <div class="m-art-img">
+              <svg viewBox="0 0 80 44" xmlns="http://www.w3.org/2000/svg"><rect width="80" height="44" fill="#220822"/><text x="40" y="22" text-anchor="middle" dominant-baseline="middle" font-size="7" fill="#6a3a6a">Kép</text></svg>
+            </div>
+            <p class="m-art-cat">Smink</p>
+            <p class="m-art-title">Természetes ragyogás éjjeli rutin</p>
+          </div>
+          <div class="m-art">
+            <div class="m-art-img">
+              <svg viewBox="0 0 80 44" xmlns="http://www.w3.org/2000/svg"><rect width="80" height="44" fill="#1e061e"/><text x="40" y="22" text-anchor="middle" dominant-baseline="middle" font-size="7" fill="#6a3a6a">Kép</text></svg>
+            </div>
+            <p class="m-art-cat">Divat</p>
+            <p class="m-art-title">Capsule wardrobe tavasszal</p>
+          </div>
+        </div>
+        <div class="m-banner">Banner · 728×90</div>
+        <div class="m-footer">
+          <span>© Frizura és Szépség</span><span>Adatvédelem · Impresszum</span>
+        </div>
+      </div>
+      <div class="btn-section">
+        <button class="choose-btn da-dark" onclick="selectCard(this.closest('.card')); event.stopPropagation();">Ezt választom</button>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+
+<!-- ===================================================
+     DESIGN B — Feminin Légiesség
+=================================================== -->
+<section class="design-row">
+  <p class="row-label">Design B — Feminin Légiesség</p>
+  <div class="cards-grid">
+
+    <!-- B LIGHT -->
+    <article class="card db-light" onclick="selectCard(this)">
+      <div class="selected-badge">✓ Kiválasztva</div>
+      <div class="card-meta">
+        <p class="card-variant">Nappal · Világos</p>
+        <h2 class="card-name">Feminin Légiesség</h2>
+        <p class="card-desc">Meleg rózsaszínű árnyalatok, lekerekített kártyák, barátságos arányok. Minden korosztálynak vonzó: a 20 éves influencer-követőtől a 55 éves elegáns nőig.</p>
+      </div>
+      <hr class="card-sep" style="background:#2d1235;">
+      <div class="typo-section">
+        <p class="micro-label" style="color:#2d1235;">Tipográfia (Sen betűtípussal a kész témában)</p>
+        <p class="db-light typo-h1">Frizura és Szépség</p>
+        <p class="db-light typo-h2">Szépségápolás · Trendi frizurák</p>
+        <p class="db-light typo-body">Fedezd fel a legfrissebb trendjeinket: a legjobb hajápolási tippek, szezonális szépségrutinok és professzionális tanácsok egy helyen.</p>
+      </div>
+      <div class="palette-section">
+        <p class="micro-label" style="color:#2d1235;">Szín paletta</p>
+        <div class="swatches">
+          <div class="swatch" style="background:#de59de;"></div>
+          <div class="swatch" style="background:#8b3c8b;"></div>
+          <div class="swatch" style="background:#f0d0f0;"></div>
+          <div class="swatch" style="background:#fdf5fc; border:1px solid #e8d0e8;"></div>
+          <div class="swatch" style="background:#2d1235;"></div>
+        </div>
+      </div>
+      <div class="mini db-light">
+        <div class="m-nav">
+          <span class="m-logo">Frizura &amp; Szépség</span>
+          <span class="m-nav-items"><span>Frizurák</span><span>Smink</span><span>Divat</span><span>Egészség</span><span>···</span></span>
+        </div>
+        <div class="m-hero">
+          <div class="m-hero-inner">
+            <p class="m-hero-tag">Kiemelt cikk</p>
+            <p class="m-hero-title" style="font-size:0.95rem;font-weight:800;color:#2d1235;line-height:1.2;">Az idei nyár leg&shy;divatosabb frizurái</p>
+          </div>
+          <div class="m-hero-svg-wrap">
+            <svg viewBox="0 0 72 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+              <rect width="72" height="80" fill="url(#grad-b-l)"/>
+              <defs>
+                <linearGradient id="grad-b-l" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#f0d0f0"/>
+                  <stop offset="100%" stop-color="#d8a8d8"/>
+                </linearGradient>
+              </defs>
+              <text x="36" y="40" text-anchor="middle" dominant-baseline="middle" font-size="7" fill="#b080b0">Kép</text>
+            </svg>
+          </div>
+        </div>
+        <!-- Slider indicator -->
+        <div style="display:flex;justify-content:center;gap:5px;padding:0.4rem 1rem 0;background:#fdf5fc;">
+          <span style="width:18px;height:4px;border-radius:2px;background:#de59de;display:inline-block;"></span>
+          <span style="width:6px;height:4px;border-radius:2px;background:#e8c0e8;display:inline-block;"></span>
+          <span style="width:6px;height:4px;border-radius:2px;background:#e8c0e8;display:inline-block;"></span>
+        </div>
+        <div class="m-cats">
+          <span class="m-cat-chip active">Hajápolás</span>
+          <span class="m-cat-chip">Smink</span>
+          <span class="m-cat-chip">Divat</span>
+        </div>
+        <div class="m-content">
+          <div class="m-art-card">
+            <div class="m-art-img">
+              <svg viewBox="0 0 80 40" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;"><rect width="80" height="40" fill="url(#g1)"/><defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f4d0f4"/><stop offset="100%" stop-color="#e0b8e0"/></linearGradient></defs><text x="40" y="20" text-anchor="middle" dominant-baseline="middle" font-size="6" fill="#c090c0">Kép</text></svg>
+            </div>
+            <div class="m-art-body">
+              <p class="m-art-cat">Hajápolás</p>
+              <p class="m-art-title">5 hajtipp, amit ki kell próbálnod</p>
+            </div>
+          </div>
+          <div class="m-art-card">
+            <div class="m-art-img">
+              <svg viewBox="0 0 80 40" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;"><rect width="80" height="40" fill="url(#g2)"/><defs><linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ecc4ec"/><stop offset="100%" stop-color="#d8a8d8"/></linearGradient></defs><text x="40" y="20" text-anchor="middle" dominant-baseline="middle" font-size="6" fill="#c090c0">Kép</text></svg>
+            </div>
+            <div class="m-art-body">
+              <p class="m-art-cat">Smink</p>
+              <p class="m-art-title">Ragyogó arcbőr lépésről lépésre</p>
+            </div>
+          </div>
+          <div class="m-art-card">
+            <div class="m-art-img">
+              <svg viewBox="0 0 80 40" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;"><rect width="80" height="40" fill="url(#g3)"/><defs><linearGradient id="g3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e4b8f4"/><stop offset="100%" stop-color="#d0a0e0"/></linearGradient></defs><text x="40" y="20" text-anchor="middle" dominant-baseline="middle" font-size="6" fill="#c090c0">Kép</text></svg>
+            </div>
+            <div class="m-art-body">
+              <p class="m-art-cat">Divat</p>
+              <p class="m-art-title">Tavaszi capsule ruhatár</p>
+            </div>
+          </div>
+        </div>
+        <div class="m-banner">Banner · 728×90</div>
+        <div class="m-footer">
+          <span class="m-footer-logo">F&amp;Sz</span>
+          <span>Menü · Hírlevél · Adatvédelem</span>
+        </div>
+      </div>
+      <div class="btn-section">
+        <button class="choose-btn db-light" onclick="selectCard(this.closest('.card')); event.stopPropagation();">Ezt választom</button>
+      </div>
+    </article>
+
+    <!-- B DARK -->
+    <article class="card db-dark" onclick="selectCard(this)">
+      <div class="selected-badge">✓ Kiválasztva</div>
+      <div class="card-meta">
+        <p class="card-variant">Este · Sötét</p>
+        <h2 class="card-name">Feminin Légiesség</h2>
+        <p class="card-desc">Mély szilva-lila háttér, lágy levendulaárnyalatú szöveg. Meleg és intimséget árasztó, mintha egy prémium fürdőszoba-márka kampánya jönne életre.</p>
+      </div>
+      <hr class="card-sep" style="background:#eeddf8;">
+      <div class="typo-section">
+        <p class="micro-label" style="color:#eeddf8;opacity:0.38;">Tipográfia (Sen betűtípussal a kész témában)</p>
+        <p class="db-dark typo-h1">Frizura és Szépség</p>
+        <p class="db-dark typo-h2">Szépségápolás · Trendi frizurák</p>
+        <p class="db-dark typo-body">Fedezd fel a legfrissebb trendjeinket: a legjobb hajápolási tippek, szezonális szépségrutinok és professzionális tanácsok egy helyen.</p>
+      </div>
+      <div class="palette-section">
+        <p class="micro-label" style="color:#eeddf8;opacity:0.38;">Szín paletta</p>
+        <div class="swatches">
+          <div class="swatch" style="background:#de59de;"></div>
+          <div class="swatch" style="background:#e87de8;"></div>
+          <div class="swatch" style="background:#3d1a50;"></div>
+          <div class="swatch" style="background:#1e0d28;"></div>
+          <div class="swatch" style="background:#eeddf8;"></div>
+        </div>
+      </div>
+      <div class="mini db-dark">
+        <div class="m-nav">
+          <span class="m-logo">Frizura &amp; Szépség</span>
+          <span class="m-nav-items"><span>Frizurák</span><span>Smink</span><span>Divat</span><span>Egészség</span><span>···</span></span>
+        </div>
+        <div class="m-hero">
+          <div class="m-hero-inner">
+            <p class="m-hero-tag">Kiemelt cikk</p>
+            <p class="m-hero-title" style="font-size:0.95rem;font-weight:800;color:#f0e4f8;line-height:1.2;">Az idei nyár leg&shy;divatosabb frizurái</p>
+          </div>
+          <div class="m-hero-svg-wrap">
+            <svg viewBox="0 0 72 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+              <rect width="72" height="80" fill="url(#grad-b-d)"/>
+              <defs>
+                <linearGradient id="grad-b-d" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#4a1a5a"/>
+                  <stop offset="100%" stop-color="#380e48"/>
+                </linearGradient>
+              </defs>
+              <text x="36" y="40" text-anchor="middle" dominant-baseline="middle" font-size="7" fill="#8a5a9a">Kép</text>
+            </svg>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:center;gap:5px;padding:0.4rem 1rem 0;background:#1e0d28;">
+          <span style="width:18px;height:4px;border-radius:2px;background:#de59de;display:inline-block;"></span>
+          <span style="width:6px;height:4px;border-radius:2px;background:#4a2858;display:inline-block;"></span>
+          <span style="width:6px;height:4px;border-radius:2px;background:#4a2858;display:inline-block;"></span>
+        </div>
+        <div class="m-cats">
+          <span class="m-cat-chip active">Hajápolás</span>
+          <span class="m-cat-chip">Smink</span>
+          <span class="m-cat-chip">Divat</span>
+        </div>
+        <div class="m-content">
+          <div class="m-art-card">
+            <div class="m-art-img">
+              <svg viewBox="0 0 80 40" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;"><rect width="80" height="40" fill="#3a1448"/><text x="40" y="20" text-anchor="middle" dominant-baseline="middle" font-size="6" fill="#7a4a8a">Kép</text></svg>
+            </div>
+            <div class="m-art-body">
+              <p class="m-art-cat">Hajápolás</p>
+              <p class="m-art-title">5 hajtipp, amit ki kell próbálnod</p>
+            </div>
+          </div>
+          <div class="m-art-card">
+            <div class="m-art-img">
+              <svg viewBox="0 0 80 40" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;"><rect width="80" height="40" fill="#321040"/><text x="40" y="20" text-anchor="middle" dominant-baseline="middle" font-size="6" fill="#7a4a8a">Kép</text></svg>
+            </div>
+            <div class="m-art-body">
+              <p class="m-art-cat">Smink</p>
+              <p class="m-art-title">Ragyogó arcbőr esti rutin</p>
+            </div>
+          </div>
+          <div class="m-art-card">
+            <div class="m-art-img">
+              <svg viewBox="0 0 80 40" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;"><rect width="80" height="40" fill="#2e0c3c"/><text x="40" y="20" text-anchor="middle" dominant-baseline="middle" font-size="6" fill="#7a4a8a">Kép</text></svg>
+            </div>
+            <div class="m-art-body">
+              <p class="m-art-cat">Divat</p>
+              <p class="m-art-title">Tavaszi capsule ruhatár</p>
+            </div>
+          </div>
+        </div>
+        <div class="m-banner">Banner · 728×90</div>
+        <div class="m-footer">
+          <span class="m-footer-logo">F&amp;Sz</span>
+          <span>Menü · Hírlevél · Adatvédelem</span>
+        </div>
+      </div>
+      <div class="btn-section">
+        <button class="choose-btn db-dark" onclick="selectCard(this.closest('.card')); event.stopPropagation();">Ezt választom</button>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+
+<!-- ===================================================
+     DESIGN C — Kortárs Dinamizmus
+=================================================== -->
+<section class="design-row">
+  <p class="row-label">Design C — Kortárs Dinamizmus</p>
+  <div class="cards-grid">
+
+    <!-- C LIGHT -->
+    <article class="card dc-light" onclick="selectCard(this)">
+      <div class="selected-badge">✓ Kiválasztva</div>
+      <div class="card-meta">
+        <p class="card-variant">Nappal · Világos</p>
+        <h2 class="card-name">Kortárs Dinamizmus</h2>
+        <p class="card-desc">Erős tipográfiai hierarchia, rácsos magazin-elrendezés, vastag kontúrok. Energikus és határozott — azt sugallja: ez a lap tudja, mi a trendi, és nem fél megmutatni.</p>
+      </div>
+      <hr class="card-sep" style="background:#111;">
+      <div class="typo-section">
+        <p class="micro-label" style="color:#111;">Tipográfia (Sen betűtípussal a kész témában)</p>
+        <p class="dc-light typo-h1">Frizura és Szépség</p>
+        <p class="dc-light typo-h2">Szépségápolás · Trendi frizurák</p>
+        <p class="dc-light typo-body">Fedezd fel a legfrissebb trendjeinket: a legjobb hajápolási tippek, szezonális szépségrutinok és professzionális tanácsok egy helyen.</p>
+      </div>
+      <div class="palette-section">
+        <p class="micro-label" style="color:#111;">Szín paletta</p>
+        <div class="swatches">
+          <div class="swatch" style="background:#de59de;"></div>
+          <div class="swatch" style="background:#8b3c8b;"></div>
+          <div class="swatch" style="background:#f5e0f5;"></div>
+          <div class="swatch" style="background:#ffffff; border:1px solid #eee;"></div>
+          <div class="swatch" style="background:#111111;"></div>
+        </div>
+      </div>
+      <div class="mini dc-light">
+        <div class="m-nav">
+          <span class="m-logo">F&amp;SZÉPSÉG</span>
+          <span class="m-nav-items"><span>Frizurák</span><span>Smink</span><span>Divat</span><span>Egészség</span><span>···</span></span>
+        </div>
+        <div class="m-hero">
+          <div class="m-hero-left">
+            <p class="m-hero-tag">Kiemelt cikk</p>
+            <p class="m-hero-title">Az idei nyár legdivatosabb frizurái</p>
+          </div>
+          <div class="m-hero-right">
+            <svg viewBox="0 0 90 116" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+              <rect width="90" height="116" fill="#f0d8f0"/>
+              <text x="45" y="55" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#c090c0">Slider</text>
+              <text x="45" y="68" text-anchor="middle" dominant-baseline="middle" font-size="6.5" fill="#c090c0">kép</text>
+            </svg>
+          </div>
+        </div>
+        <!-- Slider dots -->
+        <div style="display:flex;gap:4px;padding:0.4rem 1rem;background:#fff;border-bottom:1px solid #eee;">
+          <span style="width:16px;height:3px;background:#111;display:inline-block;"></span>
+          <span style="width:6px;height:3px;background:#ddd;display:inline-block;"></span>
+          <span style="width:6px;height:3px;background:#ddd;display:inline-block;"></span>
+        </div>
+        <div class="m-content">
+          <div class="m-art-item">
+            <div class="m-art-img">
+              <svg viewBox="0 0 80 36" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;"><rect width="80" height="36" fill="#f5e5f5"/><text x="40" y="18" text-anchor="middle" dominant-baseline="middle" font-size="6" fill="#d0a0d0">Kép</text></svg>
+            </div>
+            <p class="m-art-cat">Hajápolás</p>
+            <p class="m-art-title">5 hajtipp, amit ki kell próbálnod</p>
+          </div>
+          <div class="m-art-item">
+            <div class="m-art-img">
+              <svg viewBox="0 0 80 36" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;"><rect width="80" height="36" fill="#edd8f0"/><text x="40" y="18" text-anchor="middle" dominant-baseline="middle" font-size="6" fill="#d0a0d0">Kép</text></svg>
+            </div>
+            <p class="m-art-cat">Smink</p>
+            <p class="m-art-title">Természetes ragyogás naponta</p>
+          </div>
+          <div class="m-art-item">
+            <div class="m-art-img">
+              <svg viewBox="0 0 80 36" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;"><rect width="80" height="36" fill="#e8d0ec"/><text x="40" y="18" text-anchor="middle" dominant-baseline="middle" font-size="6" fill="#d0a0d0">Kép</text></svg>
+            </div>
+            <p class="m-art-cat">Divat</p>
+            <p class="m-art-title">Capsule wardrobe tavasszal</p>
+          </div>
+        </div>
+        <div class="m-sidebar-row">
+          <div class="m-sidebar-main">
+            <p class="m-sidebar-tag">Szépség tipp</p>
+            <p class="m-sidebar-text">A napi bőrápolás nem kell, hogy bonyolult legyen. Három lépés, ami tényleg számít...</p>
+          </div>
+          <div class="m-sidebar-ad">
+            <p class="m-sidebar-ad-label">Banner</p>
+            <div class="m-sidebar-ad-box">160×600</div>
+          </div>
+        </div>
+        <div class="m-footer">
+          <span class="m-footer-logo">F&amp;SZÉPSÉG</span>
+          <span class="m-footer-links">Frizurák · Smink · Divat · Hírlevél</span>
+        </div>
+      </div>
+      <div class="btn-section">
+        <button class="choose-btn dc-light" onclick="selectCard(this.closest('.card')); event.stopPropagation();">Ezt választom</button>
+      </div>
+    </article>
+
+    <!-- C DARK -->
+    <article class="card dc-dark" onclick="selectCard(this)">
+      <div class="selected-badge">✓ Kiválasztva</div>
+      <div class="card-meta">
+        <p class="card-variant">Este · Sötét</p>
+        <h2 class="card-name">Kortárs Dinamizmus</h2>
+        <p class="card-desc">Szén-fekete alapon neon magenta accent — a hero szekció maga a magenta, robbanásszerű vizuális belépő. Fiatalos, merész, tökéletes az erős brand-identitáshoz.</p>
+      </div>
+      <hr class="card-sep" style="background:#f0f0f0;">
+      <div class="typo-section">
+        <p class="micro-label" style="color:#f0f0f0;opacity:0.38;">Tipográfia (Sen betűtípussal a kész témában)</p>
+        <p class="dc-dark typo-h1">Frizura és Szépség</p>
+        <p class="dc-dark typo-h2">Szépségápolás · Trendi frizurák</p>
+        <p class="dc-dark typo-body">Fedezd fel a legfrissebb trendjeinket: a legjobb hajápolási tippek, szezonális szépségrutinok és professzionális tanácsok egy helyen.</p>
+      </div>
+      <div class="palette-section">
+        <p class="micro-label" style="color:#f0f0f0;opacity:0.38;">Szín paletta</p>
+        <div class="swatches">
+          <div class="swatch" style="background:#de59de;"></div>
+          <div class="swatch" style="background:#ff88ff;"></div>
+          <div class="swatch" style="background:#2a2a2a;"></div>
+          <div class="swatch" style="background:#111111;"></div>
+          <div class="swatch" style="background:#f0f0f0;"></div>
+        </div>
+      </div>
+      <div class="mini dc-dark">
+        <div class="m-nav">
+          <span class="m-logo">F&amp;SZÉPSÉG</span>
+          <span class="m-nav-items"><span>Frizurák</span><span>Smink</span><span>Divat</span><span>Egészség</span><span>···</span></span>
+        </div>
+        <div class="m-hero">
+          <div class="m-hero-left">
+            <p class="m-hero-tag">Kiemelt cikk</p>
+            <p class="m-hero-title">Az idei nyár legdivatosabb frizurái</p>
+          </div>
+          <div class="m-hero-right">
+            <svg viewBox="0 0 90 116" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+              <rect width="90" height="116" fill="#1e1e1e"/>
+              <text x="45" y="55" text-anchor="middle" dominant-baseline="middle" font-size="7.5" fill="#555">Slider</text>
+              <text x="45" y="68" text-anchor="middle" dominant-baseline="middle" font-size="6.5" fill="#555">kép</text>
+            </svg>
+          </div>
+        </div>
+        <div style="display:flex;gap:4px;padding:0.4rem 1rem;background:#111;border-bottom:1px solid rgba(255,255,255,0.07);">
+          <span style="width:16px;height:3px;background:#de59de;display:inline-block;"></span>
+          <span style="width:6px;height:3px;background:#333;display:inline-block;"></span>
+          <span style="width:6px;height:3px;background:#333;display:inline-block;"></span>
+        </div>
+        <div class="m-content">
+          <div class="m-art-item">
+            <div class="m-art-img">
+              <svg viewBox="0 0 80 36" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;"><rect width="80" height="36" fill="#2a2a2a"/><text x="40" y="18" text-anchor="middle" dominant-baseline="middle" font-size="6" fill="#555">Kép</text></svg>
+            </div>
+            <p class="m-art-cat">Hajápolás</p>
+            <p class="m-art-title">5 hajtipp, amit ki kell próbálnod</p>
+          </div>
+          <div class="m-art-item">
+            <div class="m-art-img">
+              <svg viewBox="0 0 80 36" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;"><rect width="80" height="36" fill="#222222"/><text x="40" y="18" text-anchor="middle" dominant-baseline="middle" font-size="6" fill="#555">Kép</text></svg>
+            </div>
+            <p class="m-art-cat">Smink</p>
+            <p class="m-art-title">Természetes ragyogás naponta</p>
+          </div>
+          <div class="m-art-item">
+            <div class="m-art-img">
+              <svg viewBox="0 0 80 36" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;"><rect width="80" height="36" fill="#1e1e1e"/><text x="40" y="18" text-anchor="middle" dominant-baseline="middle" font-size="6" fill="#555">Kép</text></svg>
+            </div>
+            <p class="m-art-cat">Divat</p>
+            <p class="m-art-title">Capsule wardrobe tavasszal</p>
+          </div>
+        </div>
+        <div class="m-sidebar-row">
+          <div class="m-sidebar-main">
+            <p class="m-sidebar-tag">Szépség tipp</p>
+            <p class="m-sidebar-text">A napi bőrápolás nem kell, hogy bonyolult legyen. Három lépés, ami tényleg számít...</p>
+          </div>
+          <div class="m-sidebar-ad">
+            <p class="m-sidebar-ad-label">Banner</p>
+            <div class="m-sidebar-ad-box">160×600</div>
+          </div>
+        </div>
+        <div class="m-footer">
+          <span class="m-footer-logo">F&amp;SZÉPSÉG</span>
+          <span class="m-footer-links">Frizurák · Smink · Divat · Hírlevél</span>
+        </div>
+      </div>
+      <div class="btn-section">
+        <button class="choose-btn dc-dark" onclick="selectCard(this.closest('.card')); event.stopPropagation();">Ezt választom</button>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ===== FOOTER NOTE ===== -->
+<footer style="text-align:center;margin-top:2rem;color:#9a88a8;font-size:0.75rem;line-height:1.7;">
+  <p>A kész témában Sen betűtípus lesz használva (Google Fonts, Gutenberg-kompatibilis).<br>
+  A képhelyek üresek — az ügyfél aktiválás után tölti fel saját képeit a WordPress Site Editorban.<br>
+  A slider a főoldalon a legfrissebb cikkek kiemelt képeit jeleníti majd meg.</p>
+</footer>
+
+<script>
+(function () {
+  var allCards = document.querySelectorAll('.card');
+
+  function selectCard(card) {
+    var alreadySelected = card.classList.contains('selected');
+
+    allCards.forEach(function (c) {
+      c.classList.remove('selected');
+      c.classList.remove('dimmed');
+    });
+
+    if (!alreadySelected) {
+      card.classList.add('selected');
+      allCards.forEach(function (c) {
+        if (c !== card) {
+          c.classList.add('dimmed');
+        }
+      });
+    }
+  }
+
+  // Expose for inline onclick
+  window.selectCard = selectCard;
+})();
+</script>
+
+</body>
+</html>
